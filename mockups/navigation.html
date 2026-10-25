@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Womb — Navigation & Language System Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --womb-bg: #080a07;
+    --womb-surface: #0f1410;
+    --womb-accent: #c4b078;
+    --womb-accent-hover: #ddd098;
+    --womb-text: #f0ede8;
+    --womb-text-muted: #8a9080;
+    --womb-border: rgba(30, 42, 27, 0.45);
+    --womb-glass: rgba(15, 20, 16, 0.75);
+    --womb-glass-organic: rgba(15, 20, 16, 0.55);
+    --womb-success: #6abf69;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--womb-bg);
+    color: var(--womb-text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(60, 90, 40, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(196, 176, 120, 0.05) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* ─── Sidebar ─── */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 260px;
+    background: var(--womb-glass);
+    backdrop-filter: blur(16px);
+    border-right: 1px solid var(--womb-border);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px 20px;
+    border-bottom: 1px solid var(--womb-border);
+    margin-bottom: 8px;
+  }
+
+  .logo-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--womb-accent), #8b7a3e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.7rem;
+    color: var(--womb-bg);
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--womb-text);
+  }
+
+  .nav-section {
+    padding: 8px 12px;
+  }
+
+  .nav-section-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--womb-text-muted);
+    padding: 12px 12px 6px;
+    opacity: 0.6;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--womb-text-muted);
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    background: rgba(196, 176, 120, 0.06);
+    color: var(--womb-text);
+  }
+
+  .nav-item.active {
+    background: rgba(196, 176, 120, 0.1);
+    color: var(--womb-accent);
+  }
+
+  .nav-item .icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--womb-accent);
+    color: var(--womb-bg);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .nav-item .new-tag {
+    margin-left: auto;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--womb-accent);
+    opacity: 0.7;
+  }
+
+  .nav-item .rename-tag {
+    font-size: 0.55rem;
+    font-weight: 500;
+    color: var(--womb-text-muted);
+    opacity: 0.4;
+    margin-left: auto;
+  }
+
+  /* User section */
+  .user-section {
+    margin-top: auto;
+    padding: 12px 16px;
+    border-top: 1px solid var(--womb-border);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c4b078, #6abf69);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--womb-bg);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+
+  .avatar::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--womb-accent), var(--womb-success));
+    z-index: -1;
+    animation: breatheAvatar 4s ease-in-out infinite;
+  }
+
+  @keyframes breatheAvatar {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  .user-info {
+    flex: 1;
+  }
+
+  .user-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .user-id {
+    font-size: 0.65rem;
+    color: var(--womb-text-muted);
+  }
+
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--womb-success);
+    box-shadow: 0 0 6px var(--womb-success);
+  }
+
+  /* ─── Main Content ─── */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 1100px;
+  }
+
+  .column {
+    background: var(--womb-glass-organic);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--womb-border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .column-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--womb-border);
+  }
+
+  .column-title.old { color: var(--womb-text-muted); }
+  .column-title.new { color: var(--womb-accent); }
+
+  .rename-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30, 42, 27, 0.2);
+    font-size: 0.85rem;
+  }
+
+  .rename-row:last-child { border-bottom: none; }
+
+  .rename-old {
+    flex: 1;
+    color: var(--womb-text-muted);
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  .rename-arrow {
+    color: var(--womb-accent);
+    margin: 0 16px;
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .rename-new {
+    flex: 1;
+    font-weight: 500;
+    color: var(--womb-text);
+  }
+
+  .rename-desc {
+    font-size: 0.7rem;
+    color: var(--womb-text-muted);
+    margin-top: 2px;
+  }
+
+  /* Terminology section */
+  .term-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 32px;
+    max-width: 1100px;
+  }
+
+  .term-card {
+    background: var(--womb-glass-organic);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--womb-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .term-old {
+    font-size: 0.65rem;
+    color: var(--womb-text-muted);
+    text-decoration: line-through;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .term-new {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--womb-accent);
+    margin-bottom: 4px;
+  }
+
+  .term-desc {
+    font-size: 0.75rem;
+    color: var(--womb-text-muted);
+    line-height: 1.5;
+  }
+
+  .page-header {
+    margin-bottom: 32px;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .page-header p {
+    font-size: 0.8rem;
+    color: var(--womb-text-muted);
+  }
+
+  .mockup-label {
+    position: fixed;
+    bottom: 12px;
+    right: 20px;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--womb-text-muted);
+    opacity: 0.4;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar — NEW Language -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-circle">W</div>
+    <span class="logo-text">WOMB</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Activity</div>
+    <a class="nav-item active" href="#">
+      <span class="icon">◎</span> The Loop
+      <span class="new-tag">was Feed</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">🔍</span> Explore
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">⚡</span> Pulse
+      <span class="badge">3</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Create</div>
+    <a class="nav-item" href="#">
+      <span class="icon">🎨</span> Studio
+      <span class="new-tag">was Create</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">📁</span> Portfolio
+      <span class="new-tag">was Profile</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Community</div>
+    <a class="nav-item" href="#">
+      <span class="icon">◯</span> Circles
+      <span class="new-tag">new</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">💬</span> Threads
+      <span class="new-tag">was Messages</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">🤝</span> Guilds
+      <span class="new-tag">was Services</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">📅</span> Gatherings
+      <span class="new-tag">was Events</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Exchange</div>
+    <a class="nav-item" href="#">
+      <span class="icon">🏪</span> Bazaar
+    </a>
+    <a class="nav-item" href="#">
+      <span class="icon">🏠</span> Stays
+      <span class="new-tag">was Rentals</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Inner</div>
+    <a class="nav-item" href="#">
+      <span class="icon">🧘</span> Wellness Center
+    </a>
+  </div>
+
+  <div class="user-section">
+    <div class="user-card">
+      <div class="avatar">A</div>
+      <div class="user-info">
+        <div class="user-name">Andres</div>
+        <div class="user-id">@andre:thewomb.network</div>
+      </div>
+      <div class="sync-dot" title="Encrypted"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main">
+  <div class="page-header">
+    <h1>Language System Overview</h1>
+    <p>The Womb Network — Section & Terminology Renames</p>
+  </div>
+
+  <!-- Section Renames -->
+  <div class="comparison">
+    <div class="column">
+      <div class="column-title old">Current Names</div>
+      <div class="rename-row"><span class="rename-old">The Feed</span></div>
+      <div class="rename-row"><span class="rename-old">Profile</span></div>
+      <div class="rename-row"><span class="rename-old">Create</span></div>
+      <div class="rename-row"><span class="rename-old">Messages</span></div>
+      <div class="rename-row"><span class="rename-old">Events</span></div>
+      <div class="rename-row"><span class="rename-old">Services / Guild</span></div>
+      <div class="rename-row"><span class="rename-old">Rentals / Atrium</span></div>
+      <div class="rename-row"><span class="rename-old">Notifications</span></div>
+      <div class="rename-row"><span class="rename-old">Communities</span></div>
+      <div class="rename-row"><span class="rename-old">Explore</span></div>
+      <div class="rename-row"><span class="rename-old">Bazaar</span></div>
+      <div class="rename-row"><span class="rename-old">Wellness Center</span></div>
+    </div>
+    <div class="column">
+      <div class="column-title new">New Names ✦</div>
+      <div class="rename-row"><span class="rename-new">The Loop<div class="rename-desc">The living stream of ideas</div></span></div>
+      <div class="rename-row"><span class="rename-new">Portfolio<div class="rename-desc">Creator identity & body of work</div></span></div>
+      <div class="rename-row"><span class="rename-new">Studio<div class="rename-desc">Creation tools & publishing</div></span></div>
+      <div class="rename-row"><span class="rename-new">Threads<div class="rename-desc">Private conversations</div></span></div>
+      <div class="rename-row"><span class="rename-new">Gatherings<div class="rename-desc">Events & real-world meetups</div></span></div>
+      <div class="rename-row"><span class="rename-new">Guilds<div class="rename-desc">Higher-trust collaboration groups</div></span></div>
+      <div class="rename-row"><span class="rename-new">Stays<div class="rename-desc">Creator lodging & residences</div></span></div>
+      <div class="rename-row"><span class="rename-new">Pulse<div class="rename-desc">Living heartbeat of the network</div></span></div>
+      <div class="rename-row"><span class="rename-new">Circles<div class="rename-desc">Creative communities by discipline</div></span></div>
+      <div class="rename-row"><span class="rename-new">Explore<div class="rename-desc">Discovery across the network</div></span></div>
+      <div class="rename-row"><span class="rename-new">Bazaar<div class="rename-desc">Curated creative economy</div></span></div>
+      <div class="rename-row"><span class="rename-new">Wellness Center<div class="rename-desc">Inner balance of the creator</div></span></div>
+    </div>
+  </div>
+
+  <!-- Terminology Changes -->
+  <div style="margin-top: 40px;">
+    <h2 style="font-size: 1.1rem; font-weight: 400; letter-spacing: 0.05em; margin-bottom: 16px; color: var(--womb-accent);">Interaction Language</h2>
+  </div>
+
+  <div class="term-grid">
+    <div class="term-card">
+      <div class="term-old">Post / Posting</div>
+      <div class="term-new">Signal</div>
+      <div class="term-desc">Users contribute by "Dropping into the Loop." Button: "Add to the Loop"</div>
+    </div>
+    <div class="term-card">
+      <div class="term-old">Like / Heart</div>
+      <div class="term-new">Resonance</div>
+      <div class="term-desc">A deeper form of connection between creators. Replaces traditional likes.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-old">Follow</div>
+      <div class="term-new">Connect</div>
+      <div class="term-desc">Connections represent trust, not passive following.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-old">Notification</div>
+      <div class="term-new">Pulse</div>
+      <div class="term-desc">"Someone resonated with your signal" · "You were invited to a circle"</div>
+    </div>
+    <div class="term-card">
+      <div class="term-old">Join Community</div>
+      <div class="term-new">Enter Circle</div>
+      <div class="term-desc">Reinforces concentric layer symbolism. Visual: glowing ring around each category.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-old">Infinite Scroll Feed</div>
+      <div class="term-new">Daily Loops</div>
+      <div class="term-desc">Today's Loop · Morning Loop · Night Loop — healthy creative engagement.</div>
+    </div>
+  </div>
+
+  <!-- 10-Layer Architecture -->
+  <div style="margin-top: 40px;">
+    <h2 style="font-size: 1.1rem; font-weight: 400; letter-spacing: 0.05em; margin-bottom: 16px; color: var(--womb-accent);">The 10-Layer Architecture</h2>
+    <p style="font-size: 0.8rem; color: var(--womb-text-muted); margin-bottom: 20px;">Users move from outer layers toward the core. Each layer = deeper trust.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-width: 1100px;">
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">1</div>
+      <div class="term-new" style="font-size: 0.8rem;">The Gate</div>
+      <div class="term-desc">Entry & discovery</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">2</div>
+      <div class="term-new" style="font-size: 0.8rem;">The Atrium</div>
+      <div class="term-desc">Orientation</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">3</div>
+      <div class="term-new" style="font-size: 0.8rem;">The Loop</div>
+      <div class="term-desc">Activity stream</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">4</div>
+      <div class="term-new" style="font-size: 0.8rem;">Circles</div>
+      <div class="term-desc">Communities</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">5</div>
+      <div class="term-new" style="font-size: 0.8rem;">Studio</div>
+      <div class="term-desc">Creation tools</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">6</div>
+      <div class="term-new" style="font-size: 0.8rem;">Portfolio</div>
+      <div class="term-desc">Identity & work</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">7</div>
+      <div class="term-new" style="font-size: 0.8rem;">Gatherings</div>
+      <div class="term-desc">Events & meetups</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">8</div>
+      <div class="term-new" style="font-size: 0.8rem;">Bazaar</div>
+      <div class="term-desc">Marketplace</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">9</div>
+      <div class="term-new" style="font-size: 0.8rem;">Guilds</div>
+      <div class="term-desc">Collaboration</div>
+    </div>
+    <div class="term-card" style="text-align: center;">
+      <div style="font-size: 1.2rem; margin-bottom: 4px;">10</div>
+      <div class="term-new" style="font-size: 0.8rem;">Inner Chamber</div>
+      <div class="term-desc">Wellness</div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup-label">MOCKUP — Navigation & Language System · The Womb Network</div>
+
+</body>
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Womb — The Loop Interface Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --womb-bg: #080a07;
+    --womb-surface: #0f1410;
+    --womb-accent: #c4b078;
+    --womb-accent-hover: #ddd098;
+    --womb-text: #f0ede8;
+    --womb-text-muted: #8a9080;
+    --womb-border: rgba(30, 42, 27, 0.45);
+    --womb-glass: rgba(15, 20, 16, 0.75);
+    --womb-glass-organic: rgba(15, 20, 16, 0.55);
+    --womb-success: #6abf69;
+    --womb-glow: rgba(196, 176, 120, 0.3);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--womb-bg);
+    color: var(--womb-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(60, 90, 40, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(196, 176, 120, 0.05) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    position: relative;
+    z-index: 1;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--womb-border);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  .header h1 span {
+    color: var(--womb-accent);
+    font-weight: 500;
+  }
+
+  /* Loop time selector */
+  .loop-selector {
+    display: flex;
+    gap: 4px;
+    background: var(--womb-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--womb-border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .loop-tab {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--womb-text-muted);
+    border: none;
+    background: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .loop-tab:hover { color: var(--womb-text); }
+
+  .loop-tab.active {
+    background: rgba(196, 176, 120, 0.12);
+    color: var(--womb-accent);
+  }
+
+  /* ─── View Toggle ─── */
+  .view-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 20;
+    display: flex;
+    gap: 4px;
+    background: var(--womb-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--womb-border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .view-btn {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--womb-text-muted);
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .view-btn.active {
+    background: rgba(196, 176, 120, 0.12);
+    color: var(--womb-accent);
+  }
+
+  /* ─── Add to Loop (Compose) ─── */
+  .compose {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 24px auto;
+    padding: 0 24px;
+  }
+
+  .compose-box {
+    background: var(--womb-glass-organic);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--womb-border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: border-color 0.3s;
+  }
+
+  .compose-box:hover {
+    border-color: rgba(196, 176, 120, 0.25);
+  }
+
+  .compose-input {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--womb-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    resize: none;
+    outline: none;
+    min-height: 48px;
+  }
+
+  .compose-input::placeholder {
+    color: var(--womb-text-muted);
+    opacity: 0.6;
+  }
+
+  .compose-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(30, 42, 27, 0.25);
+  }
+
+  .compose-tools {
+    display: flex;
+    gap: 8px;
+  }
+
+  .compose-tool {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    color: var(--womb-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+
+  .compose-tool:hover {
+    background: rgba(196, 176, 120, 0.08);
+    color: var(--womb-accent);
+  }
+
+  .add-to-loop-btn {
+    padding: 8px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--womb-bg);
+    background: linear-gradient(135deg, var(--womb-accent), var(--womb-accent-hover));
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .add-to-loop-btn:hover {
+    box-shadow: 0 0 16px 4px var(--womb-glow);
+    transform: scale(1.02);
+  }
+
+  /* ─── Signal Cards (List View) ─── */
+  .signals-list {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .signal-card {
+    background: var(--womb-glass-organic);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--womb-border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.3s;
+    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .signal-card:nth-child(1) { animation-delay: 0.1s; }
+  .signal-card:nth-child(2) { animation-delay: 0.2s; }
+  .signal-card:nth-child(3) { animation-delay: 0.3s; }
+  .signal-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .signal-card:hover {
+    border-color: rgba(196, 176, 120, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .signal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .signal-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--womb-bg);
+    flex-shrink: 0;
+  }
+
+  .signal-meta {
+    flex: 1;
+  }
+
+  .signal-author {
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .signal-time {
+    font-size: 0.7rem;
+    color: var(--womb-text-muted);
+  }
+
+  .signal-circle {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--womb-accent);
+    background: rgba(196, 176, 120, 0.08);
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(196, 176, 120, 0.15);
+  }
+
+  .signal-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: var(--womb-text);
+  }
+
+  .signal-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .signal-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--womb-text-muted);
+    background: rgba(138, 144, 128, 0.1);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .signal-interactions {
+    display: flex;
+    gap: 20px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(30, 42, 27, 0.25);
+  }
+
+  .interaction-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: var(--womb-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .interaction-btn:hover {
+    color: var(--womb-text);
+    background: rgba(196, 176, 120, 0.06);
+  }
+
+  .interaction-btn.resonated {
+    color: var(--womb-accent);
+  }
+
+  .interaction-btn .count {
+    font-weight: 500;
+  }
+
+  /* ─── Orbital View ─── */
+  .orbital-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: calc(100vh - 100px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .orbital-container.active {
+    display: flex;
+  }
+
+  .signals-list.hidden {
+    display: none;
+  }
+
+  .orbital-ring {
+    position: relative;
+    width: 600px;
+    height: 600px;
+  }
+
+  /* Center user */
+  .orbital-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--womb-accent), #8b7a3e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--womb-bg);
+    z-index: 3;
+    box-shadow: 0 0 30px 8px rgba(196, 176, 120, 0.2);
+    animation: breatheCenter 4s ease-in-out infinite;
+  }
+
+  @keyframes breatheCenter {
+    0%, 100% { box-shadow: 0 0 20px 4px rgba(196, 176, 120, 0.15); }
+    50% { box-shadow: 0 0 40px 12px rgba(196, 176, 120, 0.3); }
+  }
+
+  .orbital-center span {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  /* Orbit rings */
+  .orbit-path {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 176, 120, 0.08);
+  }
+
+  .orbit-path.inner {
+    width: 280px;
+    height: 280px;
+    transform: translate(-50%, -50%);
+  }
+
+  .orbit-path.outer {
+    width: 500px;
+    height: 500px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Signal nodes */
+  .signal-node {
+    position: absolute;
+    width: 110px;
+    background: var(--womb-glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--womb-border);
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+
+  .signal-node:hover {
+    border-color: var(--womb-accent);
+    box-shadow: 0 0 16px 4px rgba(196, 176, 120, 0.15);
+    transform: scale(1.08);
+    z-index: 5;
+  }
+
+  .signal-node .node-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--womb-bg);
+  }
+
+  .signal-node .node-name {
+    font-size: 0.65rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .signal-node .node-preview {
+    font-size: 0.55rem;
+    color: var(--womb-text-muted);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .signal-node .node-resonance {
+    margin-top: 4px;
+    font-size: 0.55rem;
+    color: var(--womb-accent);
+  }
+
+  /* Position signal nodes in orbital pattern */
+  .signal-node:nth-child(1) { left: 50%; top: -2%; transform: translate(-50%, 0); }
+  .signal-node:nth-child(2) { right: -2%; top: 25%; }
+  .signal-node:nth-child(3) { right: -4%; bottom: 22%; }
+  .signal-node:nth-child(4) { left: 50%; bottom: -4%; transform: translate(-50%, 0); }
+  .signal-node:nth-child(5) { left: -4%; bottom: 22%; }
+  .signal-node:nth-child(6) { left: -2%; top: 25%; }
+  .signal-node:nth-child(7) { left: 30%; top: 8%; }
+  .signal-node:nth-child(8) { right: 10%; top: 50%; transform: translateY(-50%); }
+
+  /* Orbit rotation */
+  .orbital-ring {
+    animation: orbitSlow 120s linear infinite;
+  }
+
+  @keyframes orbitSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Counter-rotate nodes so text stays upright */
+  .signal-node {
+    animation: counterRotate 120s linear infinite;
+  }
+
+  @keyframes counterRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  .signal-node:nth-child(1) { animation: counterRotateC 120s linear infinite; }
+  .signal-node:nth-child(4) { animation: counterRotateC 120s linear infinite; }
+
+  @keyframes counterRotateC {
+    from { transform: translate(-50%, 0) rotate(0deg); }
+    to { transform: translate(-50%, 0) rotate(-360deg); }
+  }
+
+  /* ─── Looping Now banner ─── */
+  .looping-now {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 16px auto;
+    padding: 0 24px;
+  }
+
+  .looping-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--womb-accent);
+    padding: 6px 14px;
+    background: rgba(196, 176, 120, 0.06);
+    border: 1px solid rgba(196, 176, 120, 0.12);
+    border-radius: 100px;
+  }
+
+  .looping-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--womb-accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .mockup-label {
+    position: fixed;
+    bottom: 12px;
+    right: 20px;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--womb-text-muted);
+    opacity: 0.4;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<!-- View Toggle -->
+<div class="view-toggle">
+  <button class="view-btn active" onclick="showView('list')">List View</button>
+  <button class="view-btn" onclick="showView('orbital')">Orbital View</button>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <h1>The <span>Loop</span></h1>
+    <div class="loop-selector">
+      <button class="loop-tab">Morning</button>
+      <button class="loop-tab active">Today's Loop</button>
+      <button class="loop-tab">Night</button>
+    </div>
+  </div>
+</div>
+
+<!-- Compose -->
+<div class="compose" id="compose">
+  <div class="compose-box">
+    <textarea class="compose-input" placeholder="Drop a signal into the Loop..." rows="2"></textarea>
+    <div class="compose-actions">
+      <div class="compose-tools">
+        <button class="compose-tool" title="Image">🖼️</button>
+        <button class="compose-tool" title="Audio">🎵</button>
+        <button class="compose-tool" title="Video">🎬</button>
+        <button class="compose-tool" title="Link">🔗</button>
+      </div>
+      <button class="add-to-loop-btn">Add to the Loop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Looping Now -->
+<div class="looping-now" id="loopingNow">
+  <div class="looping-badge">
+    <div class="looping-dot"></div>
+    Looping Now · 14 signals today
+  </div>
+</div>
+
+<!-- List View -->
+<div class="signals-list" id="listView">
+  <div class="signal-card">
+    <div class="signal-header">
+      <div class="signal-avatar" style="background: linear-gradient(135deg, #c4b078, #8b7a3e);">AK</div>
+      <div class="signal-meta">
+        <div class="signal-author">ArtByKira</div>
+        <div class="signal-time">2 hours ago</div>
+      </div>
+      <div class="signal-circle">Digital Art</div>
+    </div>
+    <div class="signal-body">
+      Just finished a new cyberpunk character series 🎨 10 illustrations, all hand-drawn then digitally enhanced. Dropping on Bazaar this weekend!
+    </div>
+    <div class="signal-tags">
+      <span class="signal-tag">#visual-art</span>
+      <span class="signal-tag">#cyberpunk</span>
+      <span class="signal-tag">#illustration</span>
+    </div>
+    <div class="signal-interactions">
+      <button class="interaction-btn resonated">〰️ <span class="count">12</span> Resonance</button>
+      <button class="interaction-btn">💬 <span class="count">3</span> Thread</button>
+      <button class="interaction-btn">↻ <span class="count">2</span> Reloop</button>
+    </div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <div class="signal-avatar" style="background: linear-gradient(135deg, #6abf69, #3a7a3e);">FS</div>
+      <div class="signal-meta">
+        <div class="signal-author">FlowState</div>
+        <div class="signal-time">4 hours ago</div>
+      </div>
+      <div class="signal-circle">Beat Makers</div>
+    </div>
+    <div class="signal-body">
+      Free beat-making workshop happening Monday — virtual, encrypted stream. Covering Ableton workflow from scratch to master. Sign up on Gatherings!
+    </div>
+    <div class="signal-tags">
+      <span class="signal-tag">#music</span>
+      <span class="signal-tag">#production</span>
+      <span class="signal-tag">#workshop</span>
+    </div>
+    <div class="signal-interactions">
+      <button class="interaction-btn">〰️ <span class="count">8</span> Resonance</button>
+      <button class="interaction-btn">💬 <span class="count">1</span> Thread</button>
+      <button class="interaction-btn">↻ <span class="count">5</span> Reloop</button>
+    </div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <div class="signal-avatar" style="background: linear-gradient(135deg, #b078c4, #7a3e8b);">VM</div>
+      <div class="signal-meta">
+        <div class="signal-author">VoxMachina</div>
+        <div class="signal-time">6 hours ago</div>
+      </div>
+      <div class="signal-circle">Writers</div>
+    </div>
+    <div class="signal-body">
+      Working on a speculative fiction series about digital consciousness. Chapter one explores what happens when an AI becomes aware of its own creative process. Would love beta readers from the Writers circle.
+    </div>
+    <div class="signal-tags">
+      <span class="signal-tag">#writing</span>
+      <span class="signal-tag">#sci-fi</span>
+      <span class="signal-tag">#beta-readers</span>
+    </div>
+    <div class="signal-interactions">
+      <button class="interaction-btn resonated">〰️ <span class="count">21</span> Resonance</button>
+      <button class="interaction-btn">💬 <span class="count">7</span> Thread</button>
+      <button class="interaction-btn">↻ <span class="count">3</span> Reloop</button>
+    </div>
+  </div>
+
+  <div class="signal-card">
+    <div class="signal-header">
+      <div class="signal-avatar" style="background: linear-gradient(135deg, #c47878, #8b3e3e);">NL</div>
+      <div class="signal-meta">
+        <div class="signal-author">NeonLens</div>
+        <div class="signal-time">9 hours ago</div>
+      </div>
+      <div class="signal-circle">Indie Film</div>
+    </div>
+    <div class="signal-body">
+      Night shoot wrapped. 16mm grain on digital — the texture is everything. Posting the first still to my Portfolio tomorrow. This film is going to feel alive.
+    </div>
+    <div class="signal-tags">
+      <span class="signal-tag">#film</span>
+      <span class="signal-tag">#16mm</span>
+      <span class="signal-tag">#cinematography</span>
+    </div>
+    <div class="signal-interactions">
+      <button class="interaction-btn">〰️ <span class="count">15</span> Resonance</button>
+      <button class="interaction-btn">💬 <span class="count">4</span> Thread</button>
+      <button class="interaction-btn">↻ <span class="count">1</span> Reloop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Orbital View -->
+<div class="orbital-container" id="orbitalView">
+  <div class="orbital-ring">
+    <div class="orbit-path inner"></div>
+    <div class="orbit-path outer"></div>
+    <div class="orbital-center"><span>YOU</span></div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #c4b078, #8b7a3e);">AK</div>
+      <div class="node-name">ArtByKira</div>
+      <div class="node-preview">Cyberpunk character series 🎨</div>
+      <div class="node-resonance">〰️ 12</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #6abf69, #3a7a3e);">FS</div>
+      <div class="node-name">FlowState</div>
+      <div class="node-preview">Beat-making workshop Monday</div>
+      <div class="node-resonance">〰️ 8</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #b078c4, #7a3e8b);">VM</div>
+      <div class="node-name">VoxMachina</div>
+      <div class="node-preview">Speculative fiction series</div>
+      <div class="node-resonance">〰️ 21</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #c47878, #8b3e3e);">NL</div>
+      <div class="node-name">NeonLens</div>
+      <div class="node-preview">Night shoot wrapped. 16mm grain</div>
+      <div class="node-resonance">〰️ 15</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #78b0c4, #3e6e8b);">SC</div>
+      <div class="node-name">SonicCraft</div>
+      <div class="node-preview">New ambient EP dropping</div>
+      <div class="node-resonance">〰️ 6</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #c4a878, #8b6e3e);">DW</div>
+      <div class="node-name">DriftWood</div>
+      <div class="node-preview">Sculpture installation photos</div>
+      <div class="node-resonance">〰️ 9</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #78c498, #3e8b5e);">MP</div>
+      <div class="node-name">MotionPix</div>
+      <div class="node-preview">Animation reel updated</div>
+      <div class="node-resonance">〰️ 4</div>
+    </div>
+
+    <div class="signal-node">
+      <div class="node-avatar" style="background: linear-gradient(135deg, #c478a8, #8b3e6e);">EV</div>
+      <div class="node-name">EchoVerse</div>
+      <div class="node-preview">Spoken word piece tonight</div>
+      <div class="node-resonance">〰️ 11</div>
+    </div>
+  </div>
+</div>
+
+<div class="mockup-label">MOCKUP — The Loop Interface · The Womb Network</div>
+
+<script>
+  function showView(view) {
+    const listView = document.getElementById('listView');
+    const orbitalView = document.getElementById('orbitalView');
+    const compose = document.getElementById('compose');
+    const loopingNow = document.getElementById('loopingNow');
+    const btns = document.querySelectorAll('.view-btn');
+
+    if (view === 'list') {
+      listView.classList.remove('hidden');
+      orbitalView.classList.remove('active');
+      compose.style.display = '';
+      loopingNow.style.display = '';
+      btns[0].classList.add('active');
+      btns[1].classList.remove('active');
+    } else {
+      listView.classList.add('hidden');
+      orbitalView.classList.add('active');
+      compose.style.display = 'none';
+      loopingNow.style.display = 'none';
+      btns[1].classList.add('active');
+      btns[0].classList.remove('active');
+    }
+  }
+
+  // Make loop tabs clickable
+  document.querySelectorAll('.loop-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.loop-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

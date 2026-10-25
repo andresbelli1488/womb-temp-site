@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Womb — Birth Screen Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --womb-bg: #080a07;
+    --womb-accent: #c4b078;
+    --womb-accent-hover: #ddd098;
+    --womb-text: #f0ede8;
+    --womb-text-muted: #8a9080;
+    --womb-glow: rgba(196, 176, 120, 0.3);
+    --womb-glow-strong: rgba(196, 176, 120, 0.6);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--womb-bg);
+    color: var(--womb-text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(60, 90, 40, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(196, 176, 120, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(196, 176, 120, 0.02) 0%, transparent 70%);
+    animation: gradientShift 15s ease infinite;
+    z-index: 0;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--womb-accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatParticle var(--dur) var(--delay) ease-in-out infinite;
+  }
+
+  @keyframes floatParticle {
+    0% { opacity: 0; transform: translateY(100vh) scale(0); }
+    20% { opacity: 0.4; }
+    50% { opacity: 0.2; }
+    80% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(-20vh) scale(1.5); }
+  }
+
+  /* Content */
+  .birth-container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 700px;
+    padding: 2rem;
+  }
+
+  .line {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.8s var(--spring) forwards;
+    animation-delay: var(--delay, 0s);
+    --spring: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+    --delay: 0.5s;
+  }
+
+  .welcome .name {
+    color: var(--womb-accent);
+    font-weight: 500;
+  }
+
+  .entered {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 3rem;
+    color: var(--womb-text-muted);
+    --delay: 1.5s;
+  }
+
+  .manifesto-line {
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 2.2;
+    letter-spacing: 0.03em;
+    color: var(--womb-text);
+  }
+
+  .manifesto-line:nth-child(1) { --delay: 2.8s; }
+  .manifesto-line:nth-child(2) { --delay: 3.6s; }
+  .manifesto-line:nth-child(3) { --delay: 4.4s; }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--womb-accent), transparent);
+    margin: 2.5rem auto;
+    --delay: 5.4s;
+  }
+
+  .encrypted-line {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 2;
+    color: var(--womb-text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .encrypted-line:nth-child(1) { --delay: 5.8s; }
+  .encrypted-line:nth-child(2) { --delay: 6.4s; }
+
+  .encrypted-line em {
+    font-style: normal;
+    color: var(--womb-accent);
+  }
+
+  /* CTA Button */
+  .cta-wrap {
+    margin-top: 3.5rem;
+    --delay: 7.5s;
+  }
+
+  .cta {
+    display: inline-block;
+    padding: 18px 56px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--womb-bg);
+    background: linear-gradient(135deg, var(--womb-accent), var(--womb-accent-hover));
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    animation: breatheCta 4s ease-in-out infinite;
+    animation-delay: 8s;
+    text-decoration: none;
+  }
+
+  .cta:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 30px 8px var(--womb-glow);
+  }
+
+  @keyframes breatheCta {
+    0%, 100% {
+      box-shadow: 0 0 12px 3px var(--womb-glow);
+    }
+    50% {
+      box-shadow: 0 0 24px 8px var(--womb-glow-strong);
+    }
+  }
+
+  /* Founder variant */
+  .founder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1rem;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--womb-accent);
+    border: 1px solid rgba(196, 176, 120, 0.2);
+    border-radius: 100px;
+    --delay: 1.8s;
+  }
+
+  .founder-line {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--womb-accent);
+    font-style: italic;
+    margin-top: 0.75rem;
+    --delay: 7s;
+  }
+
+  /* Toggle */
+  .variant-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+  }
+
+  .variant-toggle button {
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    background: rgba(15, 20, 16, 0.75);
+    border: 1px solid rgba(30, 42, 27, 0.45);
+    color: var(--womb-text-muted);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+
+  .variant-toggle button.active {
+    color: var(--womb-accent);
+    border-color: var(--womb-accent);
+  }
+
+  .variant-toggle button:hover {
+    color: var(--womb-text);
+  }
+
+  /* Label */
+  .mockup-label {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--womb-text-muted);
+    opacity: 0.5;
+    z-index: 10;
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="variant-toggle">
+  <button class="active" onclick="showVariant('standard')">Standard</button>
+  <button onclick="showVariant('founder')">Genesis Founder</button>
+  <button onclick="replay()">↻ Replay</button>
+</div>
+
+<!-- Standard Birth Screen -->
+<div class="birth-container" id="standard">
+  <p class="line welcome">Welcome, <span class="name">Andres</span>.</p>
+  <p class="line entered">You have entered The Womb.</p>
+
+  <div style="margin-top: 1rem">
+    <p class="line manifesto-line">Here creativity is sovereign.</p>
+    <p class="line manifesto-line">Here creators own their voice.</p>
+    <p class="line manifesto-line">Here no algorithm stands between you and your audience.</p>
+  </div>
+
+  <div class="line divider"></div>
+
+  <div>
+    <p class="line encrypted-line">Your identity is now <em>encrypted</em>.</p>
+    <p class="line encrypted-line">Your key belongs <em>only to you</em>.</p>
+  </div>
+
+  <div class="line cta-wrap">
+    <a href="#" class="cta" onclick="event.preventDefault(); alert('→ Redirects to /explore')">ENTER THE WOMB</a>
+  </div>
+</div>
+
+<!-- Founder Birth Screen -->
+<div class="birth-container hidden" id="founder">
+  <p class="line welcome">Welcome, <span class="name">Andres</span>.</p>
+  <div class="line founder-badge">👑 Genesis Founder</div>
+  <p class="line entered">You have entered The Womb.</p>
+
+  <div style="margin-top: 1rem">
+    <p class="line manifesto-line">Here creativity is sovereign.</p>
+    <p class="line manifesto-line">Here creators own their voice.</p>
+    <p class="line manifesto-line">Here no algorithm stands between you and your audience.</p>
+  </div>
+
+  <div class="line divider"></div>
+
+  <div>
+    <p class="line encrypted-line">Your identity is now <em>encrypted</em>.</p>
+    <p class="line encrypted-line">Your key belongs <em>only to you</em>.</p>
+  </div>
+
+  <p class="line founder-line">You are a Genesis Founder. The first breath of something new.</p>
+
+  <div class="line cta-wrap">
+    <a href="#" class="cta" onclick="event.preventDefault(); alert('→ Redirects to /explore')">ENTER THE WOMB</a>
+  </div>
+</div>
+
+<div class="mockup-label">MOCKUP — Birth Screen · The Womb Network</div>
+
+<script>
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.setProperty('--dur', (12 + Math.random() * 18) + 's');
+    p.style.setProperty('--delay', (Math.random() * 10) + 's');
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    container.appendChild(p);
+  }
+
+  function showVariant(variant) {
+    document.getElementById('standard').classList.toggle('hidden', variant !== 'standard');
+    document.getElementById('founder').classList.toggle('hidden', variant !== 'founder');
+    document.querySelectorAll('.variant-toggle button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    replay();
+  }
+
+  function replay() {
+    const active = document.querySelector('.birth-container:not(.hidden)');
+    const lines = active.querySelectorAll('.line');
+    lines.forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // force reflow
+      el.style.animation = '';
+    });
+  }
+</script>
+</body>
+</html>
